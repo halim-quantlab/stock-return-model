@@ -1,110 +1,203 @@
-# 📊 Simple Stock Price Model — Learning-Focused Quant Project
+📊 Simple Stock Return Model — Learning-Focused Quant Project
 
-A learning-focused mini project that applies linear regression to stock return prediction, with emphasis on feature engineering, preprocessing, and model interpretation rather than maximizing predictive accuracy.
+This project develops a practical, end-to-end machine learning pipeline applied to financial time series data, with a strong emphasis on intuition, robustness, and realistic evaluation rather than purely maximizing predictive accuracy.
 
-## 🚀 Project Overview
+⸻
 
-This project was built to develop a practical understanding of the full machine learning pipeline on financial time series data.  
-Instead of aiming for the best-performing predictive model, the goal is to explore how data preprocessing, feature engineering, and regression modeling behave in a realistic low signal-to-noise financial setting.
+🎯 Objective
 
-The workflow covers:
+The goal of this project is to explore how different modeling approaches behave on financial data, and to understand the limitations of predictive modeling in low signal-to-noise environments such as stock returns.
 
-- Financial data extraction using `yfinance`
-- Return-based feature construction
-- Data cleaning and outlier handling
-- Feature scaling and normalization
-- Linear regression training using gradient descent
-- Model evaluation using R² and visual diagnostics
-- Comparison between baseline and feature-engineered models
+The project implements:
+	•	Feature engineering (lag, rolling statistics, interaction, nonlinear features)
+	•	Data preprocessing (handling missing values, outlier removal)
+	•	Feature scaling (standardization)
+	•	Time-based train/test split (no data leakage)
+	•	Model training using:
+	•	Linear Regression (gradient descent)
+	•	Logistic Regression (direction prediction)
+	•	Model evaluation using:
+	•	R² (regression)
+	•	Accuracy, confusion matrix, classification report (classification)
+	•	Strategy construction using probability-based signals
+	•	Backtesting using actual returns (out-of-sample)
+	•	Regularization (L2) to control model complexity
+	•	Visualization and diagnostics (cost curves, weights, predictions)
 
----
+⸻
 
-## 🎯 Objective
+🧠 Feature Engineering
 
-The objective of this project is to answer a simple but important question:
+To improve model expressiveness, the following features were introduced:
 
-**Can feature engineering improve a basic linear regression model for predicting next-day stock returns?**
+1. Lag Features
+	•	Return_lag1, Return_lag5
 
-To investigate this, I compared:
+2. Rolling Statistics
+	•	Momentum (rolling mean)
+	•	Volatility (rolling standard deviation)
 
-1. A **baseline model** using only a small set of raw features
-2. A **feature-engineered model** using lagged returns, rolling statistics, interaction terms, and nonlinear features
+3. Interaction Terms
+	•	Momentum × Volatility
+	•	Momentum × Volume Change
 
----
+4. Nonlinear Features
+	•	Squared terms (Momentum², Volatility²)
 
-## 🧠 Features Used
+These features aim to capture:
+	•	temporal dependencies
+	•	nonlinear relationships
+	•	interaction effects
 
-### Baseline Features
-- Momentum
-- Volatility
-- Volume Change
+⸻
 
-### Engineered Features
-- Return_lag1
-- Return_lag5
-- Momentum_5
-- Momentum_10
-- Volatility_5
-- Volatility_10
-- Mom_x_Vol
-- Mom_x_VolChange
-- Momentum_sq
-- Volatility_sq
+📈 Modeling Framework
 
-These engineered variables were designed to capture:
+🔹 1. Linear Regression (Return Prediction)
+	•	Predicts magnitude of next-period return
+	•	Optimized via gradient descent
+	•	Evaluated using:
+	•	R² score
+	•	Actual vs Predicted plots
+	•	Cost convergence and parameter evolution
 
-- temporal dependencies
-- smoothing effects
-- nonlinear relationships
-- feature interactions
+⸻
 
----
+🔹 2. Logistic Regression (Direction Prediction)
+	•	Predicts probability of positive return
+	•	Output: probability ∈ [0, 1]
 
-## 📈 Results
+Decision Rule:
+	•	Long if probability > 0.55
+	•	Short if probability < 0.45
+	•	Otherwise no position
 
-|      Model    |                    Features Used                          |      R²    |
-|---------------|-----------------------------------------------------------|------------|
-| Baseline      | Momentum, Volatility, Volume Change                       | **0.0066** |
-| Engineered    | Full feature set (lag, rolling, interaction, nonlinear)   | **0.0659** |
+Evaluation:
+	•	Accuracy
+	•	Confusion matrix
+	•	Classification report
+	•	Probability distribution
 
-### Key Observation
-The feature-engineered model improved R² by roughly **10×** relative to the baseline model.
+⸻
 
-Although the absolute R² remains small, this is expected in financial return prediction, where markets are noisy and true predictive signals are often weak.
+🔹 3. Regularization (L2)
+	•	Applied to logistic regression
+	•	Reduces overfitting
+	•	Stabilizes weight magnitudes
 
----
+Observed effects:
+	•	Smaller weights
+	•	Slight trade-off between bias and variance
 
-## 🔍 Key Insights
+⸻
 
-- The **baseline model underfits strongly**, often producing near-constant predictions.
-- **Feature engineering improves explanatory power**, even in a weak-signal financial environment.
-- Proper preprocessing such as:
-  - handling missing values
-  - removing outliers
-  - scaling features  
-  is essential for stable optimization.
-- A low or modest R² in finance does **not automatically mean the project failed** — it often reflects the true difficulty of predicting returns.
+📊 Strategy Backtesting
 
----
+A simple trading strategy is constructed using model predictions:
+	•	Signals derived from predicted probabilities
+	•	Returns computed using actual next-period returns (NOT labels)
+	•	Portfolio value computed using compounded returns
 
-## 🛠️ Tech Stack
+Metrics:
+	•	Cumulative return
+	•	Average strategy return
+	•	Volatility
+	•	Sharpe-like ratio
+	•	Number of trades
 
-- **Python**
-- **NumPy** — numerical computation
-- **Pandas** — data manipulation
-- **yfinance** — stock data extraction
-- **Matplotlib / Seaborn** — visualization
-- **scikit-learn** — scaling and evaluation
+⸻
 
----
+📈 Results & Observations
 
-## 📂 Project Structure
+Regression Models
+image.png
 
-```text
-simple-stock-price-model/
-│
-├── notebook/
-│   └── simple_stock_price_model.ipynb
-│
-├── README.md
-└── requirements.txt
+🔍 Key Insights
+	•	Baseline model shows negative R², meaning worse than predicting the mean
+	•	Feature engineering improves R² to positive territory, indicating the emergence of weak predictive signal
+	•	The improvement is incremental but meaningful, consistent with financial data behavior
+	•	Predictions remain noisy and weakly aligned with actual returns
+
+⸻
+
+📊 Visualization Insights
+	•	Actual vs Predicted plots
+	•	Baseline → near-constant predictions
+	•	Engineered → greater spread and responsiveness
+	•	Perfect-fit reference line (y = x)
+	•	Highlights deviation from ideal predictions
+	•	Cost vs Iteration
+	•	Confirms convergence of gradient descent
+	•	Weights vs Iteration
+	•	Shows stabilization of feature importance
+
+⸻
+
+⚠️ Key Learnings
+
+This project highlights important realities of quantitative modeling:
+	•	Financial markets have low signal-to-noise ratio
+	•	Predictive power is typically weak and unstable
+	•	Feature engineering helps, but does not solve the problem
+	•	Proper preprocessing (scaling, outlier handling) is critical
+	•	Logistic regression can be more useful than regression for trading decisions
+	•	Backtesting must use actual returns, not classification labels
+	•	Train/test split is essential to avoid misleading results
+
+⸻
+
+💾 Reproducibility
+
+The project includes saving:
+	•	Cleaned datasets
+	•	Train/test splits
+	•	Model outputs
+	•	Plots and summaries
+
+This ensures:
+	•	reproducibility
+	•	debugging capability
+	•	consistent backtesting
+
+⸻
+
+📦 Requirements
+
+Install dependencies with:
+pip install -r requirements.txt
+
+Main libraries used:
+	•	numpy
+	•	pandas
+	•	matplotlib
+	•	seaborn
+	•	scikit-learn
+
+⸻
+
+🧩 Summary
+
+This project demonstrates a complete pipeline from raw financial data to model evaluation and strategy backtesting.
+
+Rather than focusing solely on predictive accuracy, it emphasizes:
+	•	understanding model behavior
+	•	interpreting weak signals
+	•	evaluating models realistically
+	•	bridging theory and real-world finance
+
+It serves as a strong foundation for more advanced work such as:
+	•	factor models
+	•	regime detection
+	•	portfolio optimization
+	•	machine learning-based trading strategies
+:::
+
+⸻
+
+🚀 This version is strong because:
+
+It now clearly shows:
+	•	quant thinking (backtest + signals + returns)
+	•	ML discipline (train/test, scaling, evaluation)
+	•	realism (low R² interpretation)
+	•	engineering maturity (saving outputs)
