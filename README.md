@@ -4,7 +4,7 @@ This project builds a practical, end-to-end machine learning pipeline for financ
 
 ---
 
-## 🎯 Objective
+# 🎯 Objective
 
 The goal of this project is to explore how different modeling approaches behave on stock return data and to understand the limitations of prediction in low signal-to-noise environments.
 
@@ -27,23 +27,23 @@ The project includes:
 
 ---
 
-## 🧠 Feature Engineering
+# 🧠 Feature Engineering
 
 To improve model expressiveness beyond a small baseline feature set, the following engineered variables were introduced.
 
-### 1. Lag Features
+## 1. Lag Features
 - `Return_lag1`
 - `Return_lag5`
 
-### 2. Rolling Statistics
+## 2. Rolling Statistics
 - `Momentum_5`, `Momentum_10`
 - `Volatility_5`, `Volatility_10`
 
-### 3. Interaction Terms
+## 3. Interaction Terms
 - `Mom_x_Vol`
 - `Mom_x_VolChange`
 
-### 4. Nonlinear Features
+## 4. Nonlinear Features
 - `Momentum_sq`
 - `Volatility_sq`
 
@@ -55,9 +55,9 @@ These features are intended to capture:
 
 ---
 
-## 📈 Modeling Framework
+# 📈 Modeling Framework
 
-### 1. Linear Regression (Return Prediction)
+## 1. Linear Regression (Return Prediction)
 
 This model predicts the **magnitude** of next-period return.
 
@@ -72,7 +72,7 @@ This model predicts the **magnitude** of next-period return.
 
 ---
 
-### 2. Logistic Regression (Direction Prediction)
+## 2. Logistic Regression (Direction Prediction)
 
 This model predicts the **probability** that the next return is positive.
 
@@ -92,7 +92,7 @@ This model predicts the **probability** that the next return is positive.
 
 ---
 
-### 3. L2 Regularization
+## 3. L2 Regularization
 
 L2 regularization is applied to logistic regression to reduce overfitting and stabilize coefficients.
 
@@ -102,19 +102,19 @@ L2 regularization is applied to logistic regression to reduce overfitting and st
 
 ---
 
-## 📊 Strategy Construction and Backtesting
+# 📊 Strategy Construction and Backtesting
 
 A simple signal-based trading strategy is built from logistic regression probabilities.
 
-### Signal Rules
+## Signal Rules
 - \( +1 \): long position
 - \( -1 \): short position
 - \( 0 \): no trade
 
-### Return Construction
+## Return Construction
 Strategy returns are computed using **actual next-period returns**, not binary class labels.
 
-### Performance Diagnostics
+## Performance Diagnostics
 - Cumulative portfolio value
 - Average strategy return
 - Volatility
@@ -125,16 +125,16 @@ This makes the project more realistic by connecting model outputs to trading out
 
 ---
 
-## 📈 Results and Observations
+# 📈 Results and Observations
 
-### Regression Results
+## Regression Results
 
 | Model      | Features Used | R² |
 |------------|---------------|----|
 | Baseline   | Momentum, Volatility, Volume Change | **-0.0009** |
 | Engineered | Full feature set (lag, rolling, interaction, nonlinear) | **0.0221** |
 
-### Key Insights
+## Key Insights
 
 - The baseline model produced a **negative R²**, meaning it performed worse than a naive mean predictor.
 - Feature engineering improved R² into **positive territory**, indicating the emergence of weak but meaningful predictive structure.
@@ -142,29 +142,29 @@ This makes the project more realistic by connecting model outputs to trading out
 
 ---
 
-## 📊 Visualization Insights
+# 📊 Visualization Insights
 
 The project includes several visual diagnostics:
 
-### Actual vs Predicted
+## Actual vs Predicted
 - Baseline model: near-constant predictions and weak explanatory power
 - Engineered model: greater spread and stronger responsiveness
 
-### Perfect-Fit Reference Line
+## Perfect-Fit Reference Line
 - A \( y = x \) reference line is added to show deviation from ideal prediction
 
-### Optimization Diagnostics
+## Optimization Diagnostics
 - Cost vs Iteration: confirms convergence behavior
 - Weights vs Iteration: shows stabilization of coefficients
 - Bias vs Iteration: tracks intercept convergence
 
-### Probability Distribution Plots
+## Probability Distribution Plots
 - Show how confident the logistic model is
 - Help justify threshold-based signal construction
 
 ---
 
-## ⚠️ Key Learnings
+# ⚠️ Key Learnings
 
 This project highlights several important realities of quantitative modeling:
 
@@ -178,7 +178,7 @@ This project highlights several important realities of quantitative modeling:
 
 ---
 
-## 💾 Reproducibility
+# 💾 Reproducibility
 
 The project saves:
 
@@ -196,7 +196,7 @@ This improves:
 
 ---
 
-## 📦 Requirements
+# 📦 Requirements
 
 Install dependencies with:
 
