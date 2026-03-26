@@ -80,8 +80,8 @@ This model predicts the **probability** that the next return is positive.
 - Probability in the range \([0,1]\)
 
 **Decision rule**
-- Long if probability > 0.55
-- Short if probability < 0.45
+- Long if probability > 0.5
+- Short if probability < 0.5
 - Otherwise no position
 
 **Evaluation**
