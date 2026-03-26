@@ -1,177 +1,204 @@
-📊 Simple Stock Return Model — Learning-Focused Quant Project
+# 📊 Simple Stock Return Model — Learning-Focused Quant Project
 
-This project develops a practical, end-to-end machine learning pipeline applied to financial time series data, with a strong emphasis on intuition, robustness, and realistic evaluation rather than purely maximizing predictive accuracy.
+This project builds a practical, end-to-end machine learning pipeline for financial time series data, with emphasis on intuition, robustness, and realistic evaluation rather than purely maximizing predictive accuracy.
 
-⸻
+---
 
-🎯 Objective
+## 🎯 Objective
 
-The goal of this project is to explore how different modeling approaches behave on financial data, and to understand the limitations of predictive modeling in low signal-to-noise environments such as stock returns.
+The goal of this project is to explore how different modeling approaches behave on stock return data and to understand the limitations of prediction in low signal-to-noise environments.
 
-The project implements:
-- Feature engineering (lag, rolling statistics, interaction, nonlinear features)
-- Data preprocessing (handling missing values, outlier removal)
+The project includes:
+
+- Feature engineering (lag, rolling statistics, interaction, and nonlinear features)
+- Data preprocessing (missing-value handling and outlier removal)
 - Feature scaling (standardization)
-- Time-based train/test split (no data leakage)
+- Time-based train/test split to avoid data leakage
 - Model training using:
-- Linear Regression (gradient descent)
-- Logistic Regression (direction prediction)
+  - Linear Regression (gradient descent)
+  - Logistic Regression (direction prediction)
 - Model evaluation using:
-- R² (regression)
-- Accuracy, confusion matrix, classification report (classification)
+  - R² for regression
+  - Accuracy, confusion matrix, and classification report for classification
 - Strategy construction using probability-based signals
-- Backtesting using actual returns (out-of-sample)
-- Regularization (L2) to control model complexity
-- Visualization and diagnostics (cost curves, weights, predictions)
+- Out-of-sample backtesting using actual next returns
+- L2 regularization to control model complexity
+- Visualization and diagnostics (cost curves, parameter evolution, prediction plots)
 
-⸻
+---
 
-🧠 Feature Engineering
+## 🧠 Feature Engineering
 
-To improve model expressiveness, the following features were introduced:
+To improve model expressiveness beyond a small baseline feature set, the following engineered variables were introduced.
 
-1. Lag Features
-- Return_lag1, Return_lag5
+### 1. Lag Features
+- `Return_lag1`
+- `Return_lag5`
 
-2. Rolling Statistics
-- Momentum (rolling mean)
-- Volatility (rolling standard deviation)
+### 2. Rolling Statistics
+- `Momentum_5`, `Momentum_10`
+- `Volatility_5`, `Volatility_10`
 
-3. Interaction Terms
-- Momentum × Volatility
-- Momentum × Volume Change
+### 3. Interaction Terms
+- `Mom_x_Vol`
+- `Mom_x_VolChange`
 
-4. Nonlinear Features
-- Squared terms (Momentum², Volatility²)
+### 4. Nonlinear Features
+- `Momentum_sq`
+- `Volatility_sq`
 
-These features aim to capture:
+These features are intended to capture:
+
 - temporal dependencies
 - nonlinear relationships
-- interaction effects
+- interaction effects between market variables
 
-⸻
+---
 
-📈 Modeling Framework
+## 📈 Modeling Framework
 
-🔹 1. Linear Regression (Return Prediction)
-	- Predicts magnitude of next-period return
-	- Optimized via gradient descent
-	- Evaluated using:
-	- R² score
-	- Actual vs Predicted plots
-	- Cost convergence and parameter evolution
+### 1. Linear Regression (Return Prediction)
 
-⸻
+This model predicts the **magnitude** of next-period return.
 
-🔹 2. Logistic Regression (Direction Prediction)
-	- Predicts probability of positive return
-	- Output: probability ∈ [0, 1]
+**Key elements**
+- Optimized via batch gradient descent
+- Evaluated using R²
+- Visualized with:
+  - Actual vs Predicted plots
+  - Cost vs Iteration
+  - Weights vs Iteration
+  - Bias vs Iteration
 
-Decision Rule:
-	- Long if probability > 0.55
-	- Short if probability < 0.45
-	- Otherwise no position
+---
 
-Evaluation:
-	- Accuracy
-	- Confusion matrix
-	- Classification report
-	- Probability distribution
+### 2. Logistic Regression (Direction Prediction)
 
-⸻
+This model predicts the **probability** that the next return is positive.
 
-🔹 3. Regularization (L2)
-	- Applied to logistic regression
-	- Reduces overfitting
-	- Stabilizes weight magnitudes
+**Output**
+- Probability in the range \([0,1]\)
 
-Observed effects:
-	- Smaller weights
-	- Slight trade-off between bias and variance
+**Decision rule**
+- Long if probability > 0.55
+- Short if probability < 0.45
+- Otherwise no position
 
+**Evaluation**
+- Accuracy
+- Confusion matrix
+- Classification report
+- Probability distribution plots
 
-⸻
+---
 
-📈 Results & Observations
+### 3. L2 Regularization
 
-Regression Models
-image.png
+L2 regularization is applied to logistic regression to reduce overfitting and stabilize coefficients.
 
-🔍 Key Insights
-	- Baseline model shows negative R², meaning worse than predicting the mean
-	- Feature engineering improves R² to positive territory, indicating the emergence of weak predictive signal
-	- Predictions remain noisy and weakly aligned with actual returns
+**Observed effect**
+- Smaller weight magnitudes
+- Slight trade-off between flexibility and stability
 
-⸻
+---
 
-📊 Visualization Insights
-	- Actual vs Predicted plots
-	- Baseline → near-constant predictions
-	- Engineered → greater spread and responsiveness
-	- Perfect-fit reference line (y = x)
-	- Highlights deviation from ideal predictions
-	- Cost vs Iteration
-	- Confirms convergence of gradient descent
-	- Weights vs Iteration
-	- Shows stabilization of feature importance
+## 📊 Strategy Construction and Backtesting
 
-⸻
+A simple signal-based trading strategy is built from logistic regression probabilities.
 
-⚠️ Key Learnings
+### Signal Rules
+- \( +1 \): long position
+- \( -1 \): short position
+- \( 0 \): no trade
 
-This project highlights important realities of quantitative modeling:
-	- Financial markets have low signal-to-noise ratio
-	- Predictive power is typically weak and unstable
-	- Feature engineering helps, but does not solve the problem
-	- Proper preprocessing (scaling, outlier handling) is critical
-	- Logistic regression can be more useful than regression for trading decisions
-	- Backtesting must use actual returns, not classification labels
-	- Train/test split is essential to avoid misleading results
+### Return Construction
+Strategy returns are computed using **actual next-period returns**, not binary class labels.
 
-⸻
+### Performance Diagnostics
+- Cumulative portfolio value
+- Average strategy return
+- Volatility
+- Sharpe-like ratio
+- Number of trades
 
-💾 Reproducibility
+This makes the project more realistic by connecting model outputs to trading outcomes.
 
-The project includes saving:
-	- Cleaned datasets
-	- Train/test splits
-	- Model outputs
-	- Plots and summaries
+---
 
-This ensures:
-	- reproducibility
-	- debugging capability
-	- consistent backtesting
+## 📈 Results and Observations
 
-⸻
+### Regression Results
 
-📦 Requirements
+| Model      | Features Used | R² |
+|------------|---------------|----|
+| Baseline   | Momentum, Volatility, Volume Change | **-0.0009** |
+| Engineered | Full feature set (lag, rolling, interaction, nonlinear) | **0.0221** |
+
+### Key Insights
+
+- The baseline model produced a **negative R²**, meaning it performed worse than a naive mean predictor.
+- Feature engineering improved R² into **positive territory**, indicating the emergence of weak but meaningful predictive structure.
+- Predictions remain noisy and only weakly aligned with actual returns, which is expected in financial markets.
+
+---
+
+## 📊 Visualization Insights
+
+The project includes several visual diagnostics:
+
+### Actual vs Predicted
+- Baseline model: near-constant predictions and weak explanatory power
+- Engineered model: greater spread and stronger responsiveness
+
+### Perfect-Fit Reference Line
+- A \( y = x \) reference line is added to show deviation from ideal prediction
+
+### Optimization Diagnostics
+- Cost vs Iteration: confirms convergence behavior
+- Weights vs Iteration: shows stabilization of coefficients
+- Bias vs Iteration: tracks intercept convergence
+
+### Probability Distribution Plots
+- Show how confident the logistic model is
+- Help justify threshold-based signal construction
+
+---
+
+## ⚠️ Key Learnings
+
+This project highlights several important realities of quantitative modeling:
+
+- Financial markets have a **low signal-to-noise ratio**
+- Predictive power is often **weak and unstable**
+- Feature engineering helps, but does not eliminate noise
+- Proper preprocessing (especially scaling and outlier handling) is critical
+- Logistic regression can be more useful than regression when the goal is trading direction
+- Backtesting must use **actual returns**, not classification labels
+- Time-based train/test splitting is essential for realistic evaluation
+
+---
+
+## 💾 Reproducibility
+
+The project saves:
+
+- cleaned datasets
+- train/test splits
+- model outputs
+- plots
+- summary tables
+
+This improves:
+
+- reproducibility
+- debugging
+- consistency across experiments
+
+---
+
+## 📦 Requirements
 
 Install dependencies with:
+
+```bash
 pip install -r requirements.txt
-
-Main libraries used:
-	- numpy
-	- pandas
-	- matplotlib
-	- seaborn
-	- scikit-learn
-
-⸻
-
-🧩 Summary
-
-This project demonstrates a complete pipeline from raw financial data to model evaluation and strategy backtesting.
-
-Rather than focusing solely on predictive accuracy, it emphasizes:
-	- understanding model behavior
-	- interpreting weak signals
-	- evaluating models realistically
-	- bridging theory and real-world finance
-
-It serves as a strong foundation for more advanced work such as:
-	- factor models
-	- regime detection
-	- portfolio optimization
-	- machine learning-based trading strategies
-
