@@ -1,4 +1,4 @@
-# 📊 Simple Stock Return Model — Learning-Focused Quant Project
+# 📊 Stock Return Model Machine Learning Quant Project
 
 This project builds a practical, end-to-end machine learning pipeline for financial time series data, with emphasis on intuition, robustness, and realistic evaluation rather than purely maximizing predictive accuracy.
 
